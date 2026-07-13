@@ -232,6 +232,11 @@
             --card-glow: rgba(251, 191, 36, 0.4);
         }
 
+        .card[data-category="other-repos"] {
+            --card-accent: #94a3b8;
+            --card-glow: rgba(148, 163, 184, 0.4);
+        }
+
         /* Detail Panel */
         .detail-panel {
             max-width: 1100px;
@@ -734,7 +739,7 @@
             // PM Docs
             {
                 id: 'pm-fy27-service',
-                category: 'pm-docs',
+                category: 'other-repos',
                 icon: '📋',
                 title: 'PM FY27 Service PDLC',
                 desc: 'Product Development Lifecycle documentation and templates for FY27 services',
@@ -742,7 +747,7 @@
             },
             {
                 id: 'tpm-service-pdlc',
-                category: 'pm-docs',
+                category: 'other-repos',
                 icon: '📝',
                 title: 'TPM Service PDLC',
                 desc: 'Technical Program Management PDLC process docs and runbooks',
@@ -750,7 +755,7 @@
             },
             {
                 id: 'pmos-starter',
-                category: 'pm-docs',
+                category: 'other-repos',
                 icon: '🚀',
                 title: 'PMOS Starter Kit',
                 desc: 'Product Management Operating System onboarding and reference materials',
@@ -766,7 +771,7 @@
             },
             {
                 id: 'agentforce-contact',
-                category: 'pm-docs',
+                category: 'other-repos',
                 icon: '🤖',
                 title: 'Agentforce Contact Center PM',
                 desc: 'PM materials and strategy docs for Agentforce Contact Center products',
@@ -774,7 +779,7 @@
             },
             {
                 id: 'apple-experience',
-                category: 'pm-docs',
+                category: 'tools',
                 icon: '🍎',
                 title: 'Apple Experience Review',
                 desc: 'Competitive analysis and experience review of Apple messaging features',
@@ -1055,6 +1060,7 @@
             { id: 'skills', icon: '🧠', title: 'Skills & Agents', color: '#22d3ee' },
             { id: 'dashboards', icon: '📊', title: 'Dashboards & Analytics', color: '#34d399' },
             { id: 'pm-docs', icon: '📋', title: 'PM Documentation', color: '#a78bfa' },
+            { id: 'other-repos', icon: '📦', title: 'Other Repos', color: '#94a3b8' },
             { id: 'prototypes', icon: '🔬', title: 'Prototypes & Experiments', color: '#e879f9' },
         ];
 
