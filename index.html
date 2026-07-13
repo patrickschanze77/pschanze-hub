@@ -232,6 +232,11 @@
             --card-glow: rgba(251, 191, 36, 0.4);
         }
 
+        .card[data-category="productivity"] {
+            --card-accent: #10b981;
+            --card-glow: rgba(16, 185, 129, 0.4);
+        }
+
         .card[data-category="other-repos"] {
             --card-accent: #94a3b8;
             --card-glow: rgba(148, 163, 184, 0.4);
@@ -687,11 +692,11 @@
             },
             {
                 id: 'personal-command',
-                category: 'tools',
+                category: 'productivity',
                 icon: '🎛️',
                 title: 'Personal Command Center',
-                desc: 'Unified dashboard for workflow automation and personal productivity',
-                stats: ['Productivity', 'Dashboard', 'Automation'],
+                desc: 'Central productivity workspace housing the Productivity plugin and workflow experiments',
+                stats: ['Productivity', 'Dashboard', 'Workspace'],
             },
             {
                 id: 'solution-overview',
@@ -820,14 +825,14 @@
                 stats: ['Skill', 'Reporting', 'Sessions'],
             },
 
-            // Active
+            // Productivity
             {
                 id: 'productivity',
-                category: 'active',
+                category: 'productivity',
                 icon: '⚡',
-                title: 'Productivity',
-                desc: 'Active workspace for productivity automation and workflow experimentation',
-                stats: ['Active', 'Automation', 'Workflows'],
+                title: 'Productivity Plugin',
+                desc: 'Claude Code plugin with personal productivity skills and workflow automation',
+                stats: ['Plugin', 'Skills', 'Automation'],
             },
             {
                 id: 'pm-fy27pdlc-releases',
@@ -1048,6 +1053,7 @@
         // Category metadata
         const categories = [
             { id: 'active', icon: '⚡', title: 'Active Projects', color: '#fbbf24' },
+            { id: 'productivity', icon: '🎯', title: 'Productivity', color: '#10b981' },
             { id: 'tools', icon: '🔧', title: 'Tools & Automation', color: '#60a5fa' },
             { id: 'skills', icon: '🧠', title: 'Skills & Agents', color: '#22d3ee' },
             { id: 'dashboards', icon: '📊', title: 'Dashboards & Analytics', color: '#34d399' },
