@@ -1114,7 +1114,11 @@
 
             const panel = document.getElementById('detailPanel');
             panel.classList.add('visible');
-            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            // Wait for panel to fully expand, then scroll
+            setTimeout(() => {
+                panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
 
             // Mark active card
             document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
