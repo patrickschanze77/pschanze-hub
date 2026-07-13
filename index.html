@@ -1083,8 +1083,30 @@
 
         // Show detail panel
         function showDetail(id) {
-            const detail = details[id];
-            if (!detail) return;
+            let detail = details[id];
+
+            // Fallback for projects without detailed content
+            if (!detail) {
+                const project = projects.find(p => p.id === id);
+                if (!project) return;
+
+                detail = {
+                    icon: project.icon,
+                    title: project.title,
+                    body: `
+                        <h3>Overview</h3>
+                        <p>${project.desc}</p>
+
+                        <h3>Key Capabilities</h3>
+                        <ul>
+                            ${project.stats.map(stat => `<li>${stat}</li>`).join('')}
+                        </ul>
+
+                        <h3>Status</h3>
+                        <p>Part of the <span class="highlight">${getCategoryName(project.category)}</span> portfolio.</p>
+                    `
+                };
+            }
 
             document.getElementById('detailIcon').textContent = detail.icon;
             document.getElementById('detailTitle').textContent = detail.title;
@@ -1098,6 +1120,12 @@
             document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
             const card = document.querySelector(`.card[data-id="${id}"]`);
             if (card) card.classList.add('active');
+        }
+
+        // Helper to get category display name
+        function getCategoryName(categoryId) {
+            const category = categories.find(c => c.id === categoryId);
+            return category ? category.title : categoryId;
         }
 
         // Hide detail panel
