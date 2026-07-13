@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patrick Schanze — PM Tools & Projects</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: #0a0e1a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.4em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 1.1em;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .subtitle {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 0.85em;
+            color: #a5b4fc;
+            margin-top: 12px;
+        }
+
+        /* Metrics Bar */
+        .metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .metric {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .metric:hover {
+            transform: translateY(-2px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            color: #94a3b8;
+            font-size: 0.85em;
+        }
+
+        /* Hub Container */
+        .hub-container {
+            padding: 40px 20px;
+        }
+
+        .hub {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--card-accent, #60a5fa);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover::before,
+        .card.active::before {
+            opacity: 1;
+        }
+
+        .card:hover,
+        .card.active {
+            transform: translateY(-4px);
+            border-color: var(--card-accent, rgba(99, 102, 241, 0.5));
+            box-shadow: 0 8px 30px var(--card-glow, rgba(99, 102, 241, 0.4));
+        }
+
+        .card-icon {
+            font-size: 2em;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            color: #94a3b8;
+            font-size: 0.85em;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 0.75em;
+            color: #a5b4fc;
+        }
+
+        /* Category color mappings */
+        .card[data-category="prototypes"] {
+            --card-accent: #e879f9;
+            --card-glow: rgba(232, 121, 249, 0.4);
+        }
+
+        .card[data-category="tools"] {
+            --card-accent: #60a5fa;
+            --card-glow: rgba(96, 165, 250, 0.4);
+        }
+
+        .card[data-category="dashboards"] {
+            --card-accent: #34d399;
+            --card-glow: rgba(52, 211, 153, 0.4);
+        }
+
+        .card[data-category="pm-docs"] {
+            --card-accent: #a78bfa;
+            --card-glow: rgba(167, 139, 250, 0.4);
+        }
+
+        .card[data-category="skills"] {
+            --card-accent: #22d3ee;
+            --card-glow: rgba(34, 211, 238, 0.4);
+        }
+
+        .card[data-category="active"] {
+            --card-accent: #fbbf24;
+            --card-glow: rgba(251, 191, 36, 0.4);
+        }
+
+        /* Detail Panel */
+        .detail-panel {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 20px;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .detail-panel.visible {
+            opacity: 1;
+            max-height: 5000px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .detail-content {
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
+        }
+
+        .detail-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: #a5b4fc;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s ease;
+        }
+
+        .detail-close:hover {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .detail-icon {
+            font-size: 3em;
+        }
+
+        .detail-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .detail-body {
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        .detail-body h3 {
+            color: #f1f5f9;
+            font-size: 1.2em;
+            margin: 24px 0 12px;
+        }
+
+        .detail-body ul {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .detail-body li {
+            margin-bottom: 8px;
+        }
+
+        .detail-body a {
+            color: #60a5fa;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .detail-body a:hover {
+            color: #93c5fd;
+        }
+
+        .detail-body code {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            font-size: 0.9em;
+        }
+
+        .flow-diagram {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        .accent {
+            color: #a78bfa;
+        }
+
+        .warn {
+            color: #fbbf24;
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(99, 102, 241, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(30px);
+                opacity: 0;
+            }
+        }
+
+        /* What's New Ticker */
+        .whats-new {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .ticker-container {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .ticker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .ticker-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .ticker-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .ticker-btn {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 6px;
+            padding: 6px 12px;
+            color: #a5b4fc;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.2s ease;
+        }
+
+        .ticker-btn:hover {
+            background: rgba(99, 102, 241, 0.3);
+        }
+
+        .ticker-items {
+            display: grid;
+            gap: 12px;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .ticker-item.visible {
+            opacity: 1;
+        }
+
+        .ticker-icon {
+            font-size: 1.5em;
+        }
+
+        .ticker-content {
+            flex: 1;
+        }
+
+        .ticker-label {
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 4px;
+        }
+
+        .ticker-desc {
+            color: #94a3b8;
+            font-size: 0.85em;
+        }
+
+        .ticker-date {
+            color: #64748b;
+            font-size: 0.75em;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+            font-size: 0.85em;
+        }
+
+        .footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #93c5fd;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hub {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles -->
+    <script>
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 12 + 8) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particle.style.width = (Math.random() * 3 + 2) + 'px';
+            particle.style.height = particle.style.width;
+            document.body.appendChild(particle);
+        }
+    </script>
+
+    <div class="header">
+        <h1>Patrick Schanze — PM Tools & Projects</h1>
+        <p>Orchestrating product development with AI-powered workflows, automation, and insight</p>
+        <div class="subtitle">📊 Portfolio Hub</div>
+    </div>
+
+    <div class="metrics-bar">
+        <div class="metric" onclick="showMetricDetail('total')">
+            <div class="metric-value">25</div>
+            <div class="metric-label">Total Projects</div>
+        </div>
+        <div class="metric" onclick="showMetricDetail('active')">
+            <div class="metric-value">2</div>
+            <div class="metric-label">Active Projects</div>
+        </div>
+        <div class="metric" onclick="showMetricDetail('prototypes')">
+            <div class="metric-value">7</div>
+            <div class="metric-label">Prototypes</div>
+        </div>
+        <div class="metric" onclick="showMetricDetail('skills')">
+            <div class="metric-value">3</div>
+            <div class="metric-label">Skills & Agents</div>
+        </div>
+    </div>
+
+    <div class="hub-container">
+        <div class="hub" id="hub">
+            <!-- Cards will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-content">
+            <div class="detail-close" onclick="hideDetail()">Close</div>
+            <div class="detail-header">
+                <div class="detail-icon" id="detailIcon"></div>
+                <div class="detail-title" id="detailTitle"></div>
+            </div>
+            <div class="detail-body" id="detailBody"></div>
+        </div>
+    </div>
+
+    <div class="whats-new">
+        <div class="ticker-container">
+            <div class="ticker-header">
+                <div class="ticker-title">🔥 What's New</div>
+                <div class="ticker-controls">
+                    <button class="ticker-btn" onclick="tickerPrev()">← Prev</button>
+                    <button class="ticker-btn" onclick="tickerToggle()" id="tickerToggle">Pause</button>
+                    <button class="ticker-btn" onclick="tickerNext()">Next →</button>
+                </div>
+            </div>
+            <div class="ticker-items" id="tickerItems"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Built with Claude Code | <a href="https://github.com/patrickschanze77/pschanze-hub" target="_blank">View on GitHub</a></p>
+    </div>
+
+    <script>
+        // Project data
+        const projects = [
+            // Prototypes
+            {
+                id: 'facebook-templates',
+                category: 'prototypes',
+                icon: '📱',
+                title: 'Facebook Templates',
+                desc: 'Meta compliance prototype for external template support in notification components',
+                stats: ['Facebook', 'Templates', 'Compliance'],
+            },
+            {
+                id: 'afcc-headless',
+                category: 'prototypes',
+                icon: '🎧',
+                title: 'AFCC Headless Demos',
+                desc: 'Agentforce Contact Center headless implementation demos and patterns',
+                stats: ['Agentforce', 'Headless', 'Demo'],
+            },
+            {
+                id: 'record-info-card',
+                category: 'prototypes',
+                icon: '🃏',
+                title: 'Record Info Card Builder',
+                desc: 'Rapid prototyping tool for Salesforce record card layouts',
+                stats: ['UI', 'Builder', 'Salesforce'],
+            },
+            {
+                id: 'channel-health',
+                category: 'prototypes',
+                icon: '💚',
+                title: 'Channel Health',
+                desc: 'Monitoring dashboard for messaging channel availability and performance',
+                stats: ['Monitoring', 'Channels', 'Health'],
+            },
+            {
+                id: 'start-conversation-eol',
+                category: 'prototypes',
+                icon: '🔚',
+                title: 'Start Conversation EOL',
+                desc: 'End-of-life migration prototype for deprecated conversation APIs',
+                stats: ['Migration', 'EOL', 'API'],
+            },
+            {
+                id: 'deal-proactive',
+                category: 'prototypes',
+                icon: '🤝',
+                title: 'Deal Proactive Outreach',
+                desc: 'Automated deal engagement workflows and proactive messaging patterns',
+                stats: ['CRM', 'Automation', 'Engagement'],
+            },
+            {
+                id: 'guided-actions',
+                category: 'prototypes',
+                icon: '🧭',
+                title: 'Guided Actions Messaging',
+                desc: 'Conversational UI components with guided action flows',
+                stats: ['UI', 'Actions', 'Flows'],
+            },
+
+            // Tools
+            {
+                id: 'demo-talk-track',
+                category: 'tools',
+                icon: '🎬',
+                title: 'Demo Talk Track Tool',
+                desc: 'Transform PRDs into production-ready demo video scripts with talk tracks',
+                stats: ['Demo', 'Video', 'Script'],
+            },
+            {
+                id: 'gus-health',
+                category: 'tools',
+                icon: '🏥',
+                title: 'GUS Project Health Automator',
+                desc: 'Automated health monitoring and reporting for GUS projects',
+                stats: ['GUS', 'Monitoring', 'Reporting'],
+            },
+            {
+                id: 'ideas-scraper',
+                category: 'tools',
+                icon: '💡',
+                title: 'Ideas Scraper',
+                desc: 'IdeaExchange data extraction and analysis pipeline',
+                stats: ['IdeaExchange', 'Data', 'Analysis'],
+            },
+            {
+                id: 'personal-command',
+                category: 'tools',
+                icon: '🎛️',
+                title: 'Personal Command Center',
+                desc: 'Unified dashboard for workflow automation and personal productivity',
+                stats: ['Productivity', 'Dashboard', 'Automation'],
+            },
+            {
+                id: 'solution-overview',
+                category: 'tools',
+                icon: '📊',
+                title: 'Solution Overview Generator',
+                desc: 'Generate release Solution Overview slides and licensing grids from PRDs',
+                stats: ['Release', 'Slides', 'Automation'],
+            },
+            {
+                id: 'whatsapp-watch',
+                category: 'tools',
+                icon: '👀',
+                title: 'WhatsApp Watch',
+                desc: 'Real-time monitoring skill for WhatsApp messaging health and metrics',
+                stats: ['WhatsApp', 'Monitoring', 'Skill'],
+            },
+
+            // Dashboards
+            {
+                id: 'voc-dashboard',
+                category: 'dashboards',
+                icon: '🗣️',
+                title: 'VOC Dashboard',
+                desc: 'Voice of Customer analytics and sentiment tracking across channels',
+                stats: ['VOC', 'Analytics', 'Sentiment'],
+            },
+            {
+                id: 'messaging-product-gaps',
+                category: 'dashboards',
+                icon: '📉',
+                title: 'Messaging Product Gaps',
+                desc: 'Feature gap analysis and prioritization dashboard for messaging products',
+                stats: ['Gap Analysis', 'Messaging', 'Priority'],
+            },
+
+            // PM Docs
+            {
+                id: 'pm-fy27-service',
+                category: 'pm-docs',
+                icon: '📋',
+                title: 'PM FY27 Service PDLC',
+                desc: 'Product Development Lifecycle documentation and templates for FY27 services',
+                stats: ['PDLC', 'FY27', 'Service'],
+            },
+            {
+                id: 'tpm-service-pdlc',
+                category: 'pm-docs',
+                icon: '📝',
+                title: 'TPM Service PDLC',
+                desc: 'Technical Program Management PDLC process docs and runbooks',
+                stats: ['TPM', 'PDLC', 'Process'],
+            },
+            {
+                id: 'pmos-starter',
+                category: 'pm-docs',
+                icon: '🚀',
+                title: 'PMOS Starter Kit',
+                desc: 'Product Management Operating System onboarding and reference materials',
+                stats: ['PMOS', 'Onboarding', 'Reference'],
+            },
+            {
+                id: 'feature-gap',
+                category: 'pm-docs',
+                icon: '🎯',
+                title: 'PM Feature Gap Prioritization',
+                desc: 'Framework and tools for feature gap analysis and priority scoring',
+                stats: ['Prioritization', 'Framework', 'Gap'],
+            },
+            {
+                id: 'agentforce-contact',
+                category: 'pm-docs',
+                icon: '🤖',
+                title: 'Agentforce Contact Center PM',
+                desc: 'PM materials and strategy docs for Agentforce Contact Center products',
+                stats: ['Agentforce', 'Strategy', 'PM'],
+            },
+            {
+                id: 'apple-experience',
+                category: 'pm-docs',
+                icon: '🍎',
+                title: 'Apple Experience Review',
+                desc: 'Competitive analysis and experience review of Apple messaging features',
+                stats: ['Competitive', 'Apple', 'Review'],
+            },
+            {
+                id: 'uacp-whatsapp',
+                category: 'pm-docs',
+                icon: '💬',
+                title: 'UACP WhatsApp',
+                desc: 'UACP WhatsApp integration documentation and planning materials',
+                stats: ['UACP', 'WhatsApp', 'Integration'],
+            },
+            {
+                id: 'salesforce-brand',
+                category: 'pm-docs',
+                icon: '🎨',
+                title: 'Salesforce Brand Assets',
+                desc: 'Brand guidelines, templates, and visual assets for Salesforce PM work',
+                stats: ['Brand', 'Assets', 'Templates'],
+            },
+
+            // Skills
+            {
+                id: 'messaging-component-builder',
+                category: 'skills',
+                icon: '🔧',
+                title: 'Messaging Component Builder',
+                desc: 'Claude skill to build and deploy ConversationMessageDefinition records',
+                stats: ['Skill', 'Messaging', 'Components'],
+            },
+            {
+                id: 'messaging-core-agent',
+                category: 'skills',
+                icon: '🧠',
+                title: 'Messaging Core Agent',
+                desc: 'Specialized Claude agent for messaging platform architecture and debugging',
+                stats: ['Agent', 'Messaging', 'Architecture'],
+            },
+            {
+                id: 'claude-session-summary',
+                category: 'skills',
+                icon: '📄',
+                title: 'Claude Session Summary',
+                desc: 'Automated session summary generation with HTML reports and insights',
+                stats: ['Skill', 'Reporting', 'Sessions'],
+            },
+
+            // Active
+            {
+                id: 'productivity',
+                category: 'active',
+                icon: '⚡',
+                title: 'Productivity',
+                desc: 'Active workspace for productivity automation and workflow experimentation',
+                stats: ['Active', 'Automation', 'Workflows'],
+            },
+            {
+                id: 'pm-fy27pdlc-releases',
+                category: 'active',
+                icon: '🚢',
+                title: 'PM FY27 PDLC Releases',
+                desc: 'Active release tracking and coordination for FY27 PDLC deliverables',
+                stats: ['Active', 'Releases', 'FY27'],
+            },
+        ];
+
+        // Detail content for each project
+        const details = {
+            'facebook-templates': {
+                icon: '📱',
+                title: 'Facebook Templates — Meta Compliance Prototype',
+                body: `
+                    <h3>What It Does</h3>
+                    <p>This prototype addresses Meta's requirement for Facebook Messenger outbound notifications to use external template IDs registered with Meta. It demonstrates how Notification components in Salesforce can support external template references while maintaining backward compatibility with existing workflows.</p>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li>External template ID support in ConversationMessageDefinition records</li>
+                        <li>Backward-compatible payload structure for non-Facebook channels</li>
+                        <li>Validation patterns for Meta template registration</li>
+                    </ul>
+
+                    <h3>How It Works</h3>
+                    <div class="flow-diagram">
+<span class="highlight">Component Definition</span> → <span class="accent">External Template ID</span> → <span class="highlight">Outbound Pipeline</span> → <span class="warn">Meta API</span>
+                    </div>
+
+                    <h3>Status</h3>
+                    <p>Prototype phase — pending engineering review and Meta API testing.</p>
+
+                    <h3>Related</h3>
+                    <p>Part of the broader <span class="highlight">Messaging Telemetry</span> initiative tracked in PM-Docs.</p>
+                `
+            },
+            'demo-talk-track': {
+                icon: '🎬',
+                title: 'Demo Talk Track Tool — PRD to Video Script Pipeline',
+                body: `
+                    <h3>What It Does</h3>
+                    <p>Transforms Product Requirement Documents into production-ready 3-4 minute demo video scripts. Generates talk tracks, screen directions, and Camtasia production packs in one automated workflow.</p>
+
+                    <h3>How It Works</h3>
+                    <div class="flow-diagram">
+<span class="highlight">PRD Input</span> → <span class="accent">Claude Processing</span> → <span class="highlight">Script Generation</span> → <span class="accent">Talk Track + Directions</span> → <span class="warn">Camtasia Package</span>
+                    </div>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li>Automatic feature-to-demo-beat mapping</li>
+                        <li>Timed talk track with screen direction annotations</li>
+                        <li>Camtasia marker export for video production</li>
+                        <li>Multi-feature script orchestration</li>
+                    </ul>
+
+                    <h3>Status</h3>
+                    <p>Active — used for FY27 release demo production.</p>
+
+                    <h3>Links</h3>
+                    <p>Integrated with <code>/demo-script-writer</code> Claude skill.</p>
+                `
+            },
+            'whatsapp-watch': {
+                icon: '👀',
+                title: 'WhatsApp Watch — Real-Time Channel Monitoring Skill',
+                body: `
+                    <h3>What It Does</h3>
+                    <p>A Claude Code skill that monitors WhatsApp messaging channel health in real-time. Tracks message delivery rates, template approval status, and WABA sync issues across orgs.</p>
+
+                    <h3>How It Works</h3>
+                    <div class="flow-diagram">
+<span class="highlight">WABA APIs</span> → <span class="accent">Health Check</span> → <span class="highlight">Metric Aggregation</span> → <span class="accent">Claude Skill Interface</span> → <span class="warn">Alert / Report</span>
+                    </div>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li>Live WABA sync status across multiple orgs</li>
+                        <li>Template approval queue monitoring</li>
+                        <li>Delivery rate anomaly detection</li>
+                        <li>Automated alert generation for critical issues</li>
+                    </ul>
+
+                    <h3>Status</h3>
+                    <p>Active — deployed as a Claude skill, <a href="https://github.com/patrickschanze77/whatsapp-watch" target="_blank">view repo</a>.</p>
+
+                    <h3>Key Insight</h3>
+                    <p>By integrating monitoring directly into Claude Code, support teams can diagnose WhatsApp issues conversationally without context-switching to external dashboards.</p>
+                `
+            },
+            'voc-dashboard': {
+                icon: '🗣️',
+                title: 'VOC Dashboard — Voice of Customer Analytics',
+                body: `
+                    <h3>What It Does</h3>
+                    <p>Aggregates customer feedback from IdeaExchange, cases, Slack channels, and support transcripts into a unified sentiment dashboard. Surfaces trending feature requests and pain points across messaging products.</p>
+
+                    <h3>How It Works</h3>
+                    <div class="flow-diagram">
+<span class="highlight">Data Sources</span> (IdeaExchange, Cases, Slack) → <span class="accent">Ingestion Pipeline</span> → <span class="highlight">Sentiment Analysis</span> → <span class="accent">Dashboard</span> → <span class="warn">Priority Scoring</span>
+                    </div>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li>Multi-channel feedback aggregation</li>
+                        <li>Sentiment trend analysis over time</li>
+                        <li>Feature request clustering and deduplication</li>
+                        <li>Priority scoring based on customer impact</li>
+                    </ul>
+
+                    <h3>Status</h3>
+                    <p>Active — refreshes weekly with new feedback data.</p>
+
+                    <h3>Links</h3>
+                    <p>Related scripts: <code>patch_voc_dashboard.py</code>, <code>patch_multiselect_voctype.py</code></p>
+                `
+            },
+            'messaging-component-builder': {
+                icon: '🔧',
+                title: 'Messaging Component Builder Skill',
+                body: `
+                    <h3>What It Does</h3>
+                    <p>A Claude Code skill that builds, updates, and validates ConversationMessageDefinition records (messaging components) on Salesforce orgs via the Tooling API. Supports all component types: AutoResponse, Notification, RecordView, Flow, ApexForm, RichLink, Carousel, Media, WhatsApp Templates, and more.</p>
+
+                    <h3>How It Works</h3>
+                    <div class="flow-diagram">
+<span class="highlight">User Prompt</span> → <span class="accent">Skill Invocation</span> → <span class="highlight">Payload Generation</span> → <span class="accent">Tooling API</span> → <span class="warn">Component Deployment</span>
+                    </div>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li>Natural language component authoring</li>
+                        <li>Validation against ConversationMessageDefinition schema</li>
+                        <li>Multi-type component support (AutoResponse, Flow, WhatsApp, etc.)</li>
+                        <li>Error diagnosis and fix suggestions</li>
+                    </ul>
+
+                    <h3>Status</h3>
+                    <p>Active — used daily for messaging component development and testing.</p>
+
+                    <h3>Links</h3>
+                    <p>Invoke with <code>/messaging-component-builder</code> in Claude Code.</p>
+
+                    <h3>Key Insight</h3>
+                    <p>By making component creation conversational, iteration speed on messaging UIs increased 10x — no more manual XML/JSON wrangling or round-tripping through Setup.</p>
+                `
+            },
+            'pm-fy27pdlc-releases': {
+                icon: '🚢',
+                title: 'PM FY27 PDLC Releases — Active Release Tracking',
+                body: `
+                    <h3>What It Does</h3>
+                    <p>Central coordination workspace for FY27 Product Development Lifecycle release deliverables. Tracks PRDs, GTM materials, demo scripts, and launch readiness across all messaging features.</p>
+
+                    <h3>How It Works</h3>
+                    <div class="flow-diagram">
+<span class="highlight">PRD</span> → <span class="accent">Review</span> → <span class="highlight">Demo Script</span> → <span class="accent">Solution Overview</span> → <span class="warn">Launch</span>
+                    </div>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li>Release milestone tracking with GUS integration</li>
+                        <li>Automated demo script generation via Demo Talk Track Tool</li>
+                        <li>Solution Overview slide generation</li>
+                        <li>Launch checklist orchestration</li>
+                    </ul>
+
+                    <h3>Status</h3>
+                    <p>🚀 <span class="warn">Active</span> — this is the primary FY27 release coordination workspace.</p>
+
+                    <h3>Key Insight</h3>
+                    <p>By centralizing all release artifacts in one repo, cross-functional teams have a single source of truth for launch readiness without hunting across Quip, GUS, and Slack.</p>
+                `
+            },
+        };
+
+        // Ticker data
+        const tickerData = [
+            { color: '#60a5fa', icon: '🔧', label: 'Messaging Component Builder', date: '2026-07-10', desc: 'New skill deployed — build components conversationally' },
+            { color: '#34d399', icon: '📊', label: 'VOC Dashboard', date: '2026-07-08', desc: 'Weekly refresh now includes Slack sentiment data' },
+            { color: '#e879f9', icon: '📱', label: 'Facebook Templates Prototype', date: '2026-07-05', desc: 'Meta compliance prototype completed' },
+            { color: '#fbbf24', icon: '🚢', label: 'FY27 Release Coordination', date: '2026-07-01', desc: 'Centralized tracking now live for all FY27 releases' },
+            { color: '#a78bfa', icon: '🎬', label: 'Demo Talk Track Tool', date: '2026-06-25', desc: 'Camtasia integration added for video production' },
+        ];
+
+        let tickerPage = 0;
+        let tickerInterval = null;
+        const ITEMS_PER_PAGE = 5;
+
+        // Render cards
+        function renderCards() {
+            const hub = document.getElementById('hub');
+            projects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.setAttribute('data-category', project.category);
+                card.setAttribute('data-id', project.id);
+                card.onclick = () => showDetail(project.id);
+                card.innerHTML = `
+                    <div class="card-icon">${project.icon}</div>
+                    <div class="card-title">${project.title}</div>
+                    <div class="card-desc">${project.desc}</div>
+                    <div class="card-stats">
+                        ${project.stats.map(stat => `<div class="stat">${stat}</div>`).join('')}
+                    </div>
+                `;
+                hub.appendChild(card);
+            });
+        }
+
+        // Show detail panel
+        function showDetail(id) {
+            const detail = details[id];
+            if (!detail) return;
+
+            document.getElementById('detailIcon').textContent = detail.icon;
+            document.getElementById('detailTitle').textContent = detail.title;
+            document.getElementById('detailBody').innerHTML = detail.body;
+
+            const panel = document.getElementById('detailPanel');
+            panel.classList.add('visible');
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            // Mark active card
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            const card = document.querySelector(`.card[data-id="${id}"]`);
+            if (card) card.classList.add('active');
+        }
+
+        // Hide detail panel
+        function hideDetail() {
+            document.getElementById('detailPanel').classList.remove('visible');
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+        }
+
+        // Show metric detail
+        function showMetricDetail(metric) {
+            const metricDetails = {
+                'total': 'total-projects',
+                'active': 'pm-fy27pdlc-releases',
+                'prototypes': 'facebook-templates',
+                'skills': 'messaging-component-builder',
+            };
+            if (metricDetails[metric]) {
+                showDetail(metricDetails[metric]);
+            }
+        }
+
+        // Ticker functions
+        function renderTicker() {
+            const container = document.getElementById('tickerItems');
+            container.innerHTML = '';
+            const start = tickerPage * ITEMS_PER_PAGE;
+            const end = Math.min(start + ITEMS_PER_PAGE, tickerData.length);
+
+            for (let i = start; i < end; i++) {
+                const item = tickerData[i];
+                const div = document.createElement('div');
+                div.className = 'ticker-item';
+                div.innerHTML = `
+                    <div class="ticker-icon">${item.icon}</div>
+                    <div class="ticker-content">
+                        <div class="ticker-label" style="color: ${item.color}">${item.label}</div>
+                        <div class="ticker-desc">${item.desc}</div>
+                    </div>
+                    <div class="ticker-date">${item.date}</div>
+                `;
+                container.appendChild(div);
+                setTimeout(() => div.classList.add('visible'), 50 + i * 50);
+            }
+        }
+
+        function tickerNext() {
+            tickerPage = (tickerPage + 1) % Math.ceil(tickerData.length / ITEMS_PER_PAGE);
+            renderTicker();
+        }
+
+        function tickerPrev() {
+            tickerPage = (tickerPage - 1 + Math.ceil(tickerData.length / ITEMS_PER_PAGE)) % Math.ceil(tickerData.length / ITEMS_PER_PAGE);
+            renderTicker();
+        }
+
+        function tickerToggle() {
+            const btn = document.getElementById('tickerToggle');
+            if (tickerInterval) {
+                clearInterval(tickerInterval);
+                tickerInterval = null;
+                btn.textContent = 'Play';
+            } else {
+                tickerInterval = setInterval(tickerNext, 8000);
+                btn.textContent = 'Pause';
+            }
+        }
+
+        // Initialize
+        renderCards();
+        renderTicker();
+        tickerInterval = setInterval(tickerNext, 8000);
+    </script>
+</body>
+</html>
