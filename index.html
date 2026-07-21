@@ -562,7 +562,7 @@
 
     <div class="metrics-bar">
         <div class="metric" onclick="showMetricDetail('total')">
-            <div class="metric-value">27</div>
+            <div class="metric-value">29</div>
             <div class="metric-label">Total Projects</div>
         </div>
         <div class="metric" onclick="showMetricDetail('active')">
@@ -689,6 +689,22 @@
                 title: 'Ideas Scraper',
                 desc: 'IdeaExchange data extraction and analysis pipeline',
                 stats: ['IdeaExchange', 'Data', 'Analysis'],
+            },
+            {
+                id: 'ai-digest',
+                category: 'tools',
+                icon: '🗞️',
+                title: 'Friday AI Digest',
+                desc: 'Weekly Claude Code skills digest delivered to Slack every Friday — shipped changes, a technique deep-dive, and power-user tricks for advanced practitioners',
+                stats: ['Scheduled', 'Weekly', 'Slack'],
+            },
+            {
+                id: 'email-digest',
+                category: 'tools',
+                icon: '📬',
+                title: 'Email Digest',
+                desc: 'Daily Mon–Fri Gmail triage that classifies the inbox into Critical / Important / FYI / Noise tiers and posts a concise summary to Slack',
+                stats: ['Scheduled', 'Daily', 'Gmail→Slack'],
             },
             {
                 id: 'personal-command',
@@ -862,6 +878,69 @@
 
         // Detail content for each project
         const details = {
+            'ai-digest': {
+                icon: '🗞️',
+                title: 'Friday AI Digest — Weekly Claude Code Skills Brief',
+                body: `
+                    <h3>What It Does</h3>
+                    <p>A scheduled task that produces a weekly Claude Code skills digest for an advanced practitioner and delivers it as a Slack DM every Friday at 7:00 AM Central. It researches the week's changes, teaches one technique in depth, and surfaces exactly one resource worth the time — no beginner content, no filler.</p>
+
+                    <h3>How It Works</h3>
+                    <div class="flow-diagram">
+<span class="highlight">Friday 7AM CT</span> → <span class="accent">Research (changelog, blog, community)</span> → <span class="highlight">Write 5-section brief</span> → <span class="accent">Slack DM</span> → <span class="warn">Log topic to avoid repeats</span>
+                    </div>
+
+                    <h3>Digest Structure</h3>
+                    <ul>
+                        <li><strong>Shipped this week</strong> — only advanced-level changes that matter</li>
+                        <li><strong>Technique deep-dive</strong> — one technique with a 15-minute try-it exercise and a non-obvious gotcha</li>
+                        <li><strong>Power-user trick</strong> — one immediately usable flag, config line, or pattern</li>
+                        <li><strong>One resource</strong> — the single best video/post/talk of the week</li>
+                        <li><strong>Thought-leadership angle</strong> — a one-line take worth turning into a post</li>
+                    </ul>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li>Researches the Claude Code changelog, Anthropic news/engineering blog, and community signal (HN, Reddit, X)</li>
+                        <li>Reads <span class="highlight">digest-log.md</span> to never repeat a deep-dive topic</li>
+                        <li>Slack-native formatting with threaded sections when long; saves to file if Slack fails</li>
+                    </ul>
+
+                    <h3>Status</h3>
+                    <p>Active — scheduled task running weekly.</p>
+                `
+            },
+            'email-digest': {
+                icon: '📬',
+                title: 'Email Digest — Daily Inbox Triage to Slack',
+                body: `
+                    <h3>What It Does</h3>
+                    <p>A daily Monday–Friday email triage assistant. It reads the Gmail inbox, classifies every message into one of four tiers, and posts a concise digest to Slack — the primary way the inbox gets reviewed, so nothing critical is lost.</p>
+
+                    <h3>How It Works</h3>
+                    <div class="flow-diagram">
+<span class="highlight">8AM CT weekday</span> → <span class="accent">Fetch inbox (24h / 4d Monday)</span> → <span class="highlight">Classify into 4 tiers</span> → <span class="warn">Slack DM digest</span>
+                    </div>
+
+                    <h3>Triage Tiers</h3>
+                    <ul>
+                        <li><strong>🔴 Critical</strong> — GUS @mentions (with W-#### + the ask), Team Dependency notifications</li>
+                        <li><strong>🟠 Important</strong> — direct human email, Doc/Slide @mentions, calendar invites, file shares</li>
+                        <li><strong>🟡 FYI</strong> — org automation, GUS daily roll-ups (count + titles only)</li>
+                        <li><strong>⚪ Noise</strong> — calendar status replies, channel delivery alerts (count only)</li>
+                    </ul>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li>Weekday gate — skips weekends; Monday's 4-day lookback covers Fri/Sat/Sun</li>
+                        <li>Escalates to the higher tier when a message is ambiguous — never drops one silently</li>
+                        <li>State file tracks what's been reported across runs</li>
+                    </ul>
+
+                    <h3>Status</h3>
+                    <p>Active — scheduled weekday task delivering to Slack (U01G232C5RC).</p>
+                `
+            },
             'facebook-templates': {
                 icon: '📱',
                 title: 'Facebook Templates — Meta Compliance Prototype',
