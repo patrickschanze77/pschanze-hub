@@ -562,7 +562,7 @@
 
     <div class="metrics-bar">
         <div class="metric" onclick="showMetricDetail('total')">
-            <div class="metric-value">25</div>
+            <div class="metric-value">27</div>
             <div class="metric-label">Total Projects</div>
         </div>
         <div class="metric" onclick="showMetricDetail('active')">
@@ -570,7 +570,7 @@
             <div class="metric-label">Active Projects</div>
         </div>
         <div class="metric" onclick="showMetricDetail('prototypes')">
-            <div class="metric-value">7</div>
+            <div class="metric-value">8</div>
             <div class="metric-label">Prototypes</div>
         </div>
         <div class="metric" onclick="showMetricDetail('skills')">
@@ -713,6 +713,22 @@
                 title: 'WhatsApp Watch',
                 desc: 'Real-time monitoring skill for WhatsApp messaging health and metrics',
                 stats: ['WhatsApp', 'Monitoring', 'Skill'],
+            },
+            {
+                id: 'release-planning',
+                category: 'tools',
+                icon: '📅',
+                title: 'Release Planning Tool',
+                desc: 'Automated release planning and timeline coordination for multi-feature releases',
+                stats: ['Planning', 'Releases', 'Timeline'],
+            },
+            {
+                id: 'whatsapp-fcc',
+                category: 'prototypes',
+                icon: '🏢',
+                title: 'WhatsApp First Contact Center',
+                desc: 'WhatsApp-native first contact resolution prototype for contact center flows',
+                stats: ['WhatsApp', 'Contact Center', 'Prototype'],
             },
 
             // Dashboards
@@ -1035,15 +1051,84 @@
                     <p>By centralizing all release artifacts in one repo, cross-functional teams have a single source of truth for launch readiness without hunting across Quip, GUS, and Slack.</p>
                 `
             },
+            'release-planning': {
+                icon: '📅',
+                title: 'Release Planning Tool — Interactive Planning Board',
+                body: `
+                    <h3>What It Does</h3>
+                    <p>A single-page HTML app for managing multi-day release planning reviews. Drag-and-drop feature candidates into time slots, set estimates, define the line of confidence, and generate GUS sync briefs automatically.</p>
+
+                    <h3>How It Works</h3>
+                    <div class="flow-diagram">
+<span class="highlight">Google Sheet</span> → <span class="accent">JSON Embed</span> → <span class="highlight">Planning Board</span> → <span class="accent">Drag & Schedule</span> → <span class="warn">GUS Sync</span>
+                    </div>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li>Three-day planning agenda interface with 30-minute time slots</li>
+                        <li>Drag-and-drop scheduling for feature review sessions</li>
+                        <li>Line-of-confidence planning (Committed, Stretch, Out)</li>
+                        <li>Automatic GUS sync brief generation</li>
+                        <li>Google Meet integration with clickable links and PINs</li>
+                        <li>Dark glassmorphic theme matching portfolio hub</li>
+                    </ul>
+
+                    <h3>Data Source</h3>
+                    <p>Syncs with Google Sheets (e.g., "Messaging 266 Release Planning Candidates") — embedded as JSON constant, refreshable via Claude.</p>
+
+                    <h3>Status</h3>
+                    <p>Active — used for monthly release planning sessions.</p>
+
+                    <h3>Key Insight</h3>
+                    <p>By treating release planning as a physical meeting agenda with time-boxed slots, teams stay disciplined about scope and velocity instead of wishful feature stacking.</p>
+                `
+            },
+            'whatsapp-fcc': {
+                icon: '🏢',
+                title: 'WhatsApp First Contact Center — Cross-Functional Coordination',
+                body: `
+                    <h3>What It Does</h3>
+                    <p>Monthly cross-functional coordination meeting deck for the WhatsApp First Contact Centre initiative. Tracks status across six functions (Messaging, Voice, Agentforce, PMM, Pricing, Customer) with RAG indicators and action item accountability.</p>
+
+                    <h3>How It Works</h3>
+                    <div class="flow-diagram">
+<span class="highlight">Monthly Review</span> → <span class="accent">Function Updates</span> → <span class="highlight">Action Items</span> → <span class="accent">Risk Tracking</span> → <span class="warn">Decisions</span>
+                    </div>
+
+                    <h3>Deck Structure (8 Slides)</h3>
+                    <ul>
+                        <li><strong>Slide 1:</strong> Executive Summary — overall status, key risks, upcoming dates</li>
+                        <li><strong>Slide 2:</strong> Action Items & Decisions Tracker — accountability loop with 5-column table</li>
+                        <li><strong>Slides 3-8:</strong> Functional Status — one per team (Messaging, Voice, Agentforce, PMM, Pricing, Customer)</li>
+                    </ul>
+
+                    <h3>Key Capabilities</h3>
+                    <ul>
+                        <li>RAG status tracking per function (🔴 🟡 🟢)</li>
+                        <li>Action item accountability with owner and due dates</li>
+                        <li>Cross-functional risk identification</li>
+                        <li>Dual-purpose deck — in-room alignment + standalone for leadership</li>
+                    </ul>
+
+                    <h3>Status</h3>
+                    <p>Active — template deck refreshed monthly.</p>
+
+                    <h3>Template</h3>
+                    <p><a href="https://docs.google.com/presentation/d/1SPyHqWf33K6BK0aFk1DsZpU032W7YCt7KL4fefFgbls/edit" target="_blank">Google Slides Template</a></p>
+
+                    <h3>Key Insight</h3>
+                    <p>By building accountability directly into the deck (last month's action items on Slide 2), cross-functional teams stay aligned on who committed to what without separate tracking tools.</p>
+                `
+            },
         };
 
         // Ticker data
         const tickerData = [
+            { color: '#60a5fa', icon: '🌐', label: 'Hub Page Launch', date: '2026-07-16', desc: 'Central project hub now live with interactive portfolio view' },
             { color: '#60a5fa', icon: '🔧', label: 'Messaging Component Builder', date: '2026-07-10', desc: 'New skill deployed — build components conversationally' },
             { color: '#34d399', icon: '📊', label: 'VOC Dashboard', date: '2026-07-08', desc: 'Weekly refresh now includes Slack sentiment data' },
             { color: '#e879f9', icon: '📱', label: 'Facebook Templates Prototype', date: '2026-07-05', desc: 'Meta compliance prototype completed' },
             { color: '#fbbf24', icon: '🚢', label: 'FY27 Release Coordination', date: '2026-07-01', desc: 'Centralized tracking now live for all FY27 releases' },
-            { color: '#a78bfa', icon: '🎬', label: 'Demo Talk Track Tool', date: '2026-06-25', desc: 'Camtasia integration added for video production' },
         ];
 
         let tickerPage = 0;
